@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:teaTimer/main.dart';
 
 class timerPage extends StatefulWidget {
-  final List<String> teeData;
+  final Tee teeData;
 
   const timerPage({required this.teeData,Key? key}) : super(key: key);
 
@@ -17,6 +18,7 @@ class _timerPageState extends State<timerPage> {
     teeData = widget.teeData;
   }
 
+  //TODO: Timer implementieren
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,11 +28,11 @@ class _timerPageState extends State<timerPage> {
         title: Text("Timer"),
       ),
       backgroundColor:  Color.fromRGBO(58, 66, 86, 1),
-      body: Container(
+      body: Container( // Placeholder!
         padding: EdgeInsets.only(bottom: 100),
         child: Center(
-            child: Text("${teeData[0]} Timer \n"
-                "Duration: ${teeData[1]}",
+            child: Text("${teeData.name} Timer \n"
+                "Duration: ${teeData.duration}",
               style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Colors.white),)
         ),
       )

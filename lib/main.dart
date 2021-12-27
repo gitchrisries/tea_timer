@@ -6,13 +6,29 @@ import 'widgets/sideMenu.dart';
 
 void main() => runApp(new MyApp());
 
-List<Pair> favouriteList = [];
+// Tee Objekt
+class Tee<a, b> {
+  a name;
+  b duration;
 
-class Pair<T1, T2> {
-  final T1 a;
-  final T2 b;
-  Pair(this.a,this.b);
+  Tee(this.name, this.duration);
 }
+
+// Zur Speicherung der Favoriten
+// TODO: Mit File oder Datenbank realisieren
+List<Tee> favouriteList = [];
+
+// Teeliste
+// TODO: Evtl auch mit File oder Datenbank realisieren -> parsen
+var teeList = [
+  Tee("Grüner Tee", "5 Minuten"),
+  Tee("Schwarzer Tee", "3 Minuten"),
+  Tee("Rooibos Tee", "4 Minuten"),
+  Tee("Kamille Tee", "2 Minuten"),
+  Tee("Marokanische Minze", "5 Minuten"),
+  Tee("Limonen Tee", "2 Minuten"),
+  Tee("Apfel Tee", "2 Minuten")
+];
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -24,8 +40,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
+// Start Widget - Gerüst (appBar, bottomNavigationbar, Drawer)
+// Mit flexiblen Body
 class start extends StatefulWidget {
   const start({Key? key}) : super(key: key);
 
@@ -34,12 +50,22 @@ class start extends StatefulWidget {
 }
 
 class _startState extends State<start> {
-
-  var pages = [home(favouriteList: favouriteList,),favourites()];
+  var pages = [home(favouriteList: favouriteList), favourites()];
   String appBarText = "Home";
-  Color _iconColorHome = Colors.indigo;
-  Color _iconColorFav = Colors.white;
   int _selectedPage = 0;
+  int _selectedItem = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedItem = index;
+      _selectedPage = index;
+      if (index == 0) {
+        pages[0] = home(favouriteList: favouriteList);
+        appBarText = "Home";
+      }
+      if (index == 1) appBarText = "Set Favorites";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,45 +76,34 @@ class _startState extends State<start> {
           backgroundColor: Color.fromRGBO(70, 70, 70, 1.0),
           title: Text(appBarText),
         ),
-        bottomNavigationBar: Container(
-            height: 55.0,
-            child: BottomAppBar(
-                color: Colors.blueGrey,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            pages[0] = home(favouriteList: favouriteList,);
-                            _selectedPage = 0;
-                            appBarText = "Home";
-                            _iconColorHome = Colors.indigo;
-                            _iconColorFav = Colors.white;
-                          });
-                        },
-                        icon: Icon(Icons.home, color: _iconColorHome,size: 30,)),
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedPage = 1;
-                            appBarText = "Set Favourites";
-                            _iconColorFav = Colors.indigo;
-                            _iconColorHome = Colors.white;
-                          });
-                        },
-                        icon: Icon(Icons.favorite, color: _iconColorFav,size: 27)),
-                  ],
-                ))),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedItem,
+          backgroundColor: Colors.blueGrey,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          iconSize: 30,
+          onTap: _onItemTapped,
+          items: [
+            BottomNavigationBarItem(
+                label: "Home",
+                icon: Container(
+                    padding: EdgeInsets.only(left: 25),
+                    child: Icon(Icons.home))),
+            BottomNavigationBarItem(
+                label: "Favorite",
+                icon: Container(
+                    padding: EdgeInsets.only(right: 25),
+                    child: Icon(Icons.favorite))),
+          ],
+        ),
         body: IndexedStack(
           index: _selectedPage,
           children: pages,
-        )
-    );
+        ));
   }
 }
 
-
+// Set Favourites Page
 class favourites extends StatefulWidget {
   const favourites({Key? key}) : super(key: key);
 
@@ -97,15 +112,14 @@ class favourites extends StatefulWidget {
 }
 
 class _favouritesState extends State<favourites> {
+  // Map für die Speicherung der Favourites mit Index der Liste
+  Map<int, bool> itemSelected = Map();
 
-  Map<int,bool> itemSelected = Map();
+  // TODO: Mit File oder Datenbank speichern/auslesen
 
-  var teeList = [Pair("Grüner Tee", "5 Minuten"),Pair("Schwarzer Tee", "3 Minuten"),
-    Pair("Rooibos Tee", "4 Minuten"),Pair("Kamille Tee", "2 Minuten"),
-    Pair("Marokanische Minze", "5 Minuten"),Pair("Limonen Tee", "2 Minuten"),Pair("Apfel Tee", "2 Minuten")];
-
-  void fillItemSelected(){
-    for (int i = 0; i < teeList.length; i++){
+  // Initialisierung von itemSelected mit False
+  void fillItemSelected() {
+    for (int i = 0; i < teeList.length; i++) {
       itemSelected[i] = false;
     }
   }
@@ -122,61 +136,63 @@ class _favouritesState extends State<favourites> {
             itemBuilder: (BuildContext context, int index) {
               if (itemSelected.isEmpty) fillItemSelected();
               return Card(
-                  elevation: 8.0,
-                  shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  elevation: 10.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   color: Colors.white,
                   margin: new EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   child: Container(
                     child: ListTile(
-                      onTap: (){
-                        setState(() {
-                          if (itemSelected[index] == false){
-                            itemSelected[index] = true;
-                            favouriteList.add(teeList[index]);
-                          }else{
-                            itemSelected[index] = false;
-                            favouriteList.remove(teeList[index]);
-                          }
-                        });
-                      },
-                      contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      leading: Container(
-                        padding: EdgeInsets.only(top: 5,left: 5),
-                        child: Icon(
-                          itemSelected[index] == true ? Icons.favorite :
-                          Icons.favorite_outline,
-                          color: Colors.blueAccent
+                        // Hier wird der Tee in der favouriteListe gespeichert
+                        onTap: () {
+                          setState(() {
+                            if (itemSelected[index] == false) {
+                              itemSelected[index] = true;
+                              favouriteList.add(teeList[index]);
+                            } else {
+                              itemSelected[index] = false;
+                              favouriteList.remove(teeList[index]);
+                            }
+                          });
+                        },
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        leading: Container(
+                          padding: EdgeInsets.only(top: 5, left: 5),
+                          child: Icon(
+                              itemSelected[index] == true
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline,
+                              color: Colors.blueAccent),
                         ),
-                      ),
-                      title: Container(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text(
-                            teeList[index].a,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                          )
-                      ),
-                      subtitle: Container(
-                        padding: EdgeInsets.only(left: 20),
-                          child: Row(
-                            children: [
-                              Icon(Icons.alarm, size: 15,),
-                              Text("  Dauer: " + teeList[index].b),
-                            ],
-                          )
-                      )
-                    ),
+                        title: Container(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              teeList[index].name,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            )),
+                        subtitle: Container(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.alarm,
+                                  size: 15,
+                                ),
+                                Text("  Dauer: " + teeList[index].duration),
+                              ],
+                            ))),
                   ));
             },
           ),
-        )
-    );
+        ));
   }
 }
 
+// Home Body-Widget (Favoriten landen hier)
 class home extends StatefulWidget {
-  final List<Pair> favouriteList;
+  final List<Tee> favouriteList;
 
   const home({required this.favouriteList, Key? key}) : super(key: key);
 
@@ -185,63 +201,82 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
+  List<Tee> favorList = [];
+
+  @override
+  void initState() {
+    favorList = widget.favouriteList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color.fromRGBO(58, 66, 86, 1),
-        body: Container(
-          child: ListView.builder(
+        body: Theme(
+          data: ThemeData(canvasColor: Colors.transparent),
+          child: ReorderableListView.builder(
             padding: EdgeInsets.only(top: 10),
+            onReorder: (oldIndex, newIndex) {
+              setState(() {
+                if (newIndex > oldIndex) {
+                  newIndex = newIndex - 1;
+                }
+                final element = favorList.removeAt(oldIndex);
+                favorList.insert(newIndex, element);
+              });
+            },
             scrollDirection: Axis.vertical,
-            itemCount: favouriteList.length,
+            itemCount: favorList.length,
             itemBuilder: (BuildContext context, int index) {
-              return Card(
-                  elevation: 8.0,
-                  shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              return (Card(
+                  key: Key('$index'),
+                  elevation: 10.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   color: Colors.white,
                   margin: new EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   child: Container(
                     child: ListTile(
-                        onTap: (){
-                          Navigator.of(context, rootNavigator: true).push(
-                            new CupertinoPageRoute<bool>(
-                              builder: (BuildContext context)
-                              => timerPage(teeData: [favouriteList[index].a,favouriteList[index].b]),
-                            ),
-                          );
-                        },
-                        contentPadding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        leading: Container(
-                          padding: EdgeInsets.only(top: 5,left: 5),
-                          child: Icon(AppIcons.coffee,
-                              color: Colors.blueAccent
+                      // Hier wird das TimerWidget aufgerufen
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).push(
+                          new CupertinoPageRoute<bool>(
+                            builder: (BuildContext context) =>
+                                timerPage(teeData: favorList[index]),
                           ),
-                        ),
-                        title: Container(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Text(
-                              favouriteList[index].a,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                            )
-                        ),
-                        subtitle: Container(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Row(
-                              children: [
-                                Icon(Icons.alarm, size: 15,),
-                                Text("  Dauer: " + favouriteList[index].b),
-                              ],
-                            )
-                        )
+                        );
+                      },
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(top: 5, left: 5),
+                        child: Icon(AppIcons.coffee, color: Colors.blueAccent),
+                      ),
+                      title: Container(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text(
+                            favorList[index].name,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          )),
+                      subtitle: Container(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.alarm,
+                                size: 15,
+                              ),
+                              Text("  Dauer: " + favorList[index].duration),
+                            ],
+                          )),
+                      trailing: Icon(Icons.menu),
                     ),
-                  ));
+                  )
+              ));
             },
           ),
         )
     );
   }
 }
-
-
