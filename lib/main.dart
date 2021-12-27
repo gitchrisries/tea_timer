@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'pages/timer.dart';
+import 'widgets/sideMenu.dart';
 
 void main() => runApp(new MyApp());
+
+List<Pair> favouriteList = [];
 
 class Pair<T1, T2> {
   final T1 a;
@@ -14,12 +18,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(primaryColor: Color.fromRGBO(58, 66, 86, 1.0)),
       home: new start(),
     );
   }
 }
+
+
 
 class start extends StatefulWidget {
   const start({Key? key}) : super(key: key);
@@ -28,28 +32,22 @@ class start extends StatefulWidget {
   _startState createState() => _startState();
 }
 
-List<Pair> favouriteList = [];
-
-int _selectedPage = 0;
-var pages = [home(favouriteList: favouriteList,),favourites()];
-String appBarText = "Home";
-Color _iconColorHome = Colors.indigo;
-Color _iconColorFav = Colors.white;
-
 class _startState extends State<start> {
+
+  var pages = [home(favouriteList: favouriteList,),favourites(),timerPage()];
+  String appBarText = "Home";
+  Color _iconColorHome = Colors.indigo;
+  Color _iconColorFav = Colors.white;
+  int _selectedPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        endDrawer: sideMenu(),
         appBar: AppBar(
           elevation: 5,
           backgroundColor: Color.fromRGBO(70, 70, 70, 1.0),
           title: Text(appBarText),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.list),
-              onPressed: () {},
-            )
-          ],
         ),
         bottomNavigationBar: Container(
             height: 55.0,
@@ -117,6 +115,7 @@ class _favouritesState extends State<favourites> {
         backgroundColor: Color.fromRGBO(58, 66, 86, 1),
         body: Container(
           child: ListView.builder(
+            padding: EdgeInsets.only(top: 10),
             scrollDirection: Axis.vertical,
             itemCount: teeList.length,
             itemBuilder: (BuildContext context, int index) {
@@ -191,6 +190,7 @@ class _homeState extends State<home> {
         backgroundColor: Color.fromRGBO(58, 66, 86, 1),
         body: Container(
           child: ListView.builder(
+            padding: EdgeInsets.only(top: 10),
             scrollDirection: Axis.vertical,
             itemCount: favouriteList.length,
             itemBuilder: (BuildContext context, int index) {
@@ -202,7 +202,13 @@ class _homeState extends State<home> {
                   margin: new EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   child: Container(
                     child: ListTile(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context, rootNavigator: true).push(
+                            new CupertinoPageRoute<bool>(
+                              builder: (BuildContext context) => timerPage(),
+                            ),
+                          );
+                        },
                         contentPadding:
                         EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         leading: Container(
