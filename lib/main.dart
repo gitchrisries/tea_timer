@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:teaTimer/icons/app_icons_icons.dart';
 import 'pages/timer.dart';
 import 'widgets/sideMenu.dart';
 
@@ -34,7 +35,7 @@ class start extends StatefulWidget {
 
 class _startState extends State<start> {
 
-  var pages = [home(favouriteList: favouriteList,),favourites(),timerPage()];
+  var pages = [home(favouriteList: favouriteList,),favourites()];
   String appBarText = "Home";
   Color _iconColorHome = Colors.indigo;
   Color _iconColorFav = Colors.white;
@@ -205,7 +206,8 @@ class _homeState extends State<home> {
                         onTap: (){
                           Navigator.of(context, rootNavigator: true).push(
                             new CupertinoPageRoute<bool>(
-                              builder: (BuildContext context) => timerPage(),
+                              builder: (BuildContext context)
+                              => timerPage(teeData: [favouriteList[index].a,favouriteList[index].b]),
                             ),
                           );
                         },
@@ -213,7 +215,7 @@ class _homeState extends State<home> {
                         EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         leading: Container(
                           padding: EdgeInsets.only(top: 5,left: 5),
-                          child: Icon(Icons.favorite,
+                          child: Icon(AppIcons.coffee,
                               color: Colors.blueAccent
                           ),
                         ),
