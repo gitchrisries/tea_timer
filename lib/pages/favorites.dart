@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:teaTimer/data/tea_data.dart';
 import 'package:teaTimer/icons/app_icons_icons.dart';
 import 'package:teaTimer/pages/timer.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class FavoritePage extends StatefulWidget {
   final List<Tea> favouriteList;
@@ -52,12 +53,12 @@ class _FavoritePageState extends State<FavoritePage> {
                     child: ListTile(
                       // Hier wird das TimerWidget aufgerufen
                       onTap: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                          new CupertinoPageRoute<bool>(
-                            builder: (BuildContext context) =>
-                                timerPage(teeData: favorList[index]),
-                          ),
-                        );
+                        showCupertinoModalBottomSheet(
+                          barrierColor: Colors.black.withOpacity(0.6),
+                          topRadius: Radius.circular(20),
+                            context: context,
+                            builder: (context) =>
+                                timerPage(teeData: favorList[index]));
                       },
                       contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 10),

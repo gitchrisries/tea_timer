@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:teaTimer/pages/discover.dart';
 import 'package:teaTimer/pages/favorites.dart';
 import 'package:teaTimer/pages/search.dart';
-import 'widgets/sideMenu.dart';
 import 'pages/discover.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'data/tea_data.dart';
@@ -66,7 +65,6 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        endDrawer: sideMenu(),
         appBar: AppBar(
           toolbarHeight: 60,
           elevation: 5,

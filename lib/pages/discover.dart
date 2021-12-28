@@ -24,7 +24,7 @@ class _discoverState extends State<discover> {
               child: const Text(
                 "Tea of the day",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,),
               )),
             Container(
@@ -36,7 +36,7 @@ class _discoverState extends State<discover> {
                     ))),
               Container(
                 padding: const EdgeInsets.only(left: 20, top: 15,right: 20),
-                child: Text("Grüner Tee", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
+                child: Text("Grüner Tee", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
               ),
               Container(
                 padding: const EdgeInsets.only(left: 20, top: 5,right: 20),
@@ -44,12 +44,8 @@ class _discoverState extends State<discover> {
                     "das früher im Zusammenhang mit Tee auch als Tein, Teein oder "
                     "Thein bezeichnet wurde. Der Koffeingehalt variiert je nach Grünteesorte sehr "
                     "deutlich. Grundsätzlich weisen die japanischen Sorten Gyokuro und Sencha im "
-                    "Teewasser die höchsten und Kukicha und Bancha die niedrigsten Werte auf. "
-                    "Weitere Bestandteile der Teeblätter sind Catechine, die wichtigsten Vertreter "
-                    "sind Epicatechin (EC), Epicatechingallat (ECG), Epigallocatechin (EGC) und "
-                    "Epigallocatechingallat (EGCG). Die meisten gesundheitsfördernden Wirkungen des"
-                    " Grüntees werden den Catechinen zugeschrieben. Allerdings sind die Catechine auch "
-                    "die Stoffe, die dem Tee den bitteren Geschmack verleihen.")
+                    "Teewasser die höchsten und Kukicha und Bancha die niedrigsten Werte auf. ",
+                style: TextStyle(fontSize: 17),)
               )
             ])));
   }

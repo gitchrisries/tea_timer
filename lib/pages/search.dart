@@ -26,105 +26,95 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    var itemList = searchList.isEmpty ? teaList : searchList;
+    if (itemSelected.isEmpty) fillItemSelected();
     return Scaffold(
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-              padding: EdgeInsets.all(10),
-              child: CupertinoSearchTextField(
-                onChanged: (value) {
-                  setState(() {
-                    searchList = [];
-                    for (var tea in teaList) {
-                      if (tea.name.toLowerCase().contains(value)) {
-                        searchList.add(tea);
-                      }
-                    }
-                  });
-                },
-                backgroundColor: Colors.white,
-              )),
-          Expanded(
-              child: ListView.builder(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                scrollDirection: Axis.vertical,
-                itemCount:
-                    searchList.isEmpty ? teaList.length : searchList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (itemSelected.isEmpty) fillItemSelected();
-                  return Card(
-                      elevation: 10.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      color: Colors.white,
-                      margin:
-                          new EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      child: Container(
-                        child: ListTile(
-                            // Hier wird der Tee in der favouriteListe gespeichert
-                            onTap: () {
-                              setState(() {
-                                if (searchList.isEmpty){
-                                  if (itemSelected[teaList[index]] == false) {
-                                    itemSelected[teaList[index]] = true;
-                                    favouriteList.add(teaList[index]);
-                                  } else {
-                                    itemSelected[teaList[index]] = false;
-                                    favouriteList.remove(teaList[index]);
-                                  }
-                                }else{
-                                  if (itemSelected[searchList[index]] == false) {
-                                    itemSelected[searchList[index]] = true;
-                                    favouriteList.add(searchList[index]);
-                                  } else {
-                                    itemSelected[searchList[index]] = false;
-                                    favouriteList.remove(searchList[index]);
-                                  }
-                                }
-                              });
-                            },
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            leading: Container(
-                              padding: EdgeInsets.only(top: 5, left: 5),
-                              child: Icon(
-                                  itemSelected[searchList.isEmpty ? teaList[index] : searchList[index]] == true
-                                      ? Icons.favorite
-                                      : Icons.favorite_outline,
-                                  color: Colors.blueAccent),
-                            ),
-                            title: Container(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Text(
-                                  searchList.isEmpty
-                                      ? teaList[index].name
-                                      : searchList[index].name,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 20),
-                                )),
-                            subtitle: Container(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.alarm,
-                                      size: 15,
-                                    ),
-                                    searchList.isEmpty
-                                        ? Text(
-                                            "  Dauer: " + teaList[index].duration)
-                                        : Text("  Dauer: " +
-                                            searchList[index].duration),
-                                  ],
-                                ))),
-                      ));
-                },
+        backgroundColor: Color.fromRGBO(58, 66, 86, 1),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                  padding: EdgeInsets.all(10),
+                  child: CupertinoSearchTextField(
+                    onChanged: (value) {
+                      setState(() {
+                        searchList = [];
+                        for (var tea in teaList) {
+                          if (tea.name.toLowerCase().contains(value)) {
+                            searchList.add(tea);
+                          }
+                        }
+                      });
+                    },
+                    backgroundColor: Colors.white,
+                  )),
+              Expanded(
+                child: ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  scrollDirection: Axis.vertical,
+                  itemCount: itemList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                        elevation: 10.0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        color: Colors.white,
+                        margin: new EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        child: Container(
+                          child: ListTile(
+                              // Hier wird der Tee in der favouriteListe gespeichert
+                              onTap: () {
+                                setState(() {
+                                    if (itemSelected[itemList[index]] == false) {
+                                      itemSelected[itemList[index]] = true;
+                                      favouriteList.add(itemList[index]);
+                                    } else {
+                                      itemSelected[itemList[index]] = false;
+                                      favouriteList.remove(itemList[index]);
+                                    }
+                                });
+                              },
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              leading: Container(
+                                padding: EdgeInsets.only(top: 5, left: 5),
+                                child: Icon(
+                                    itemSelected[itemList[index]] == true ? Icons.favorite
+                                        : Icons.favorite_outline,
+                                    color: Colors.blueAccent),
+                              ),
+                              title: Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    itemList[index].name,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  )),
+                              subtitle: Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.alarm,
+                                        size: 15,
+                                      ),
+                                      Text("  Dauer: " +
+                                              itemList[index].duration),
+                                    ],
+                                  ))),
+                        ));
+                  },
+                ),
               ),
-            ),
-        ],
-      ),
-    );
+            ],
+          ),
+        ));
   }
 }
