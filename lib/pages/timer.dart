@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:teaTimer/data/tea_data.dart';
 import 'package:teaTimer/main.dart';
 
 class timerPage extends StatefulWidget {
-  final Tee teeData;
+  final Tea teeData;
 
   const timerPage({required this.teeData,Key? key}) : super(key: key);
 

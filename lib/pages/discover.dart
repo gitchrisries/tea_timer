@@ -20,20 +20,20 @@ class _discoverState extends State<discover> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  padding: const EdgeInsets.only(left: 20, top: 25),
-                  child: const Text(
-                    "Tee of the day",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,),
-                  )),
-              Container(
-                  padding: const EdgeInsets.only(left: 20, top: 10,right: 20),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            'assets/images/test.jpg',
-                          ))),
+              padding: const EdgeInsets.only(left: 20, top: 25),
+              child: const Text(
+                "Tea of the day",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,),
+              )),
+            Container(
+                padding: const EdgeInsets.only(left: 20, top: 10,right: 20),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.asset(
+                      'assets/images/test.jpg',
+                    ))),
               Container(
                 padding: const EdgeInsets.only(left: 20, top: 15,right: 20),
                 child: Text("Grüner Tee", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
