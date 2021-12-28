@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:teaTimer/icons/app_icons_icons.dart';
+import 'package:teaTimer/pages/discover.dart';
 import 'pages/timer.dart';
 import 'widgets/sideMenu.dart';
+import 'pages/discover.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 void main() => runApp(new MyApp());
 
@@ -50,8 +53,8 @@ class start extends StatefulWidget {
 }
 
 class _startState extends State<start> {
-  var pages = [home(favouriteList: favouriteList), favourites()];
-  String appBarText = "Home";
+  var pages = [discover(), home(favouriteList: favouriteList), favourites()];
+  String appBarText = "Discover";
   int _selectedPage = 0;
   int _selectedItem = 0;
 
@@ -59,11 +62,15 @@ class _startState extends State<start> {
     setState(() {
       _selectedItem = index;
       _selectedPage = index;
-      if (index == 0) {
-        pages[0] = home(favouriteList: favouriteList);
-        appBarText = "Home";
+      switch(index){
+        case 0: appBarText = "Discover"; break;
+        case 1: {
+          pages[1] = home(favouriteList: favouriteList);
+          appBarText = "Favorites";
+        }break;
+        case 2: appBarText = "Set Favorites";break;
+        case 3: appBarText = "Account";break;
       }
-      if (index == 1) appBarText = "Set Favorites";
     });
   }
 
@@ -72,29 +79,61 @@ class _startState extends State<start> {
     return Scaffold(
         endDrawer: sideMenu(),
         appBar: AppBar(
+          toolbarHeight: 70,
           elevation: 5,
           backgroundColor: Color.fromRGBO(70, 70, 70, 1.0),
-          title: Text(appBarText),
+          title: Text(
+            appBarText,
+            style: TextStyle(fontSize: 40),
+          ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedItem,
-          backgroundColor: Colors.blueGrey,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          iconSize: 30,
-          onTap: _onItemTapped,
-          items: [
-            BottomNavigationBarItem(
-                label: "Home",
-                icon: Container(
-                    padding: EdgeInsets.only(left: 25),
-                    child: Icon(Icons.home))),
-            BottomNavigationBarItem(
-                label: "Favorite",
-                icon: Container(
-                    padding: EdgeInsets.only(right: 25),
-                    child: Icon(Icons.favorite))),
-          ],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 20,
+                color: Colors.black.withOpacity(.1),
+              )
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+              child: GNav(
+                rippleColor: Colors.grey[300]!,
+                hoverColor: Colors.grey[100]!,
+                gap: 8,
+                activeColor: Colors.black,
+                iconSize: 24,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                duration: Duration(milliseconds: 400),
+                tabBackgroundColor: Colors.blueAccent[100]!,
+                color: Colors.black,
+                tabs: const [
+                  GButton(
+                    icon: Icons.explore,
+                    text: 'Discover',
+                  ),
+                  GButton(
+                    icon: Icons.favorite,
+                    text: 'Favorites',
+                  ),
+                  GButton(
+                    icon: Icons.search,
+                    text: 'Search',
+                  ),
+                  GButton(
+                    icon: Icons.account_circle,
+                    text: 'Profile',
+                  ),
+                ],
+                selectedIndex: _selectedItem,
+                onTabChange: _onItemTapped
+              ),
+            ),
+          ),
         ),
         body: IndexedStack(
           index: _selectedPage,
@@ -272,11 +311,9 @@ class _homeState extends State<home> {
                           )),
                       trailing: Icon(Icons.menu),
                     ),
-                  )
-              ));
+                  )));
             },
           ),
-        )
-    );
+        ));
   }
 }
