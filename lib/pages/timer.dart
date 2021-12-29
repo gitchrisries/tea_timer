@@ -25,7 +25,6 @@ class _timerPageState extends State<timerPage> {
       child: Container(
         height: MediaQuery.of(context).size.height * 0.93,
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
           color: Color.fromRGBO(58*2, 66*2, 86*2, 1),
         ),
         child: Column(
